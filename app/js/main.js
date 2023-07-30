@@ -1,18 +1,34 @@
 $(function(){
+
+  $('.shop-content__filter-btn').on('click', function () {
+    $('.shop-content__filter-btn').removeClass('shop-content__filter-btn--active');
+    $(this).addClass('shop-content__filter-btn--active');
+  }); //міняє колір кнопки
+
+  $('.button-list').on('click', function () { 
+    $('.product-item').addClass('product-item--list');
+  }); //міняє тип відображення разом з наступною ф-єю
+
+  $('.button-grid').on('click', function () {
+    $('.product-item').removeClass('product-item--list');
+  });
+
+  $('.select-style').styler(); //додає стилі для select
+
   $('.top-slider__inner').slick({
     dots: true,
     arrows: false,
     fade: true,
     autoplay: true,
     autoplaySpeed: 2000
-  })
+  }) // підключення слайдера
 
   $(".star").rateYo({
     starWidth: "17px",
     normalFill: "#ccccce",
     ratedFill: "#ffc35b",
     readOnly: true
-  });
+  }); //підключення рейтингу
 
   function getTimeRemaining(endtime) {
     const total = Date.parse(endtime) - Date.parse(new Date());
@@ -29,6 +45,19 @@ $(function(){
       seconds
     };
   }
+
+  $('.filter-price__input').ionRangeSlider({
+    type: "double",
+    prefix: "$",
+    onStart: function (data){
+      $('.filter-price__from').text(data.from);
+      $('.filter-price__to').text(data.to);
+    },
+    onChange: function (data) {
+      $('.filter-price__from').text(data.from);
+      $('.filter-price__to').text(data.to);
+    }
+   })
 
   function initializeClock(id, endtime) {
     const clock = document.querySelector('.promo__clock');
@@ -55,6 +84,7 @@ $(function(){
   }
 
   const deadline = $('.promo__clock').attr('data-time');
-  initializeClock('promo__clock', deadline);
+  initializeClock('promo__clock', deadline); //підключення зворотнього таймера
+
 
 })
