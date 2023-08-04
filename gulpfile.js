@@ -26,7 +26,6 @@ function nunjucks() {
 function styles() {
   return src('app/scss/*.scss')
     .pipe(scss({ outputStyle: 'compressed' }))
-    // .pipe(concat())
     .pipe(rename({
       suffix: '.min'
     }))
@@ -36,17 +35,6 @@ function styles() {
     }))
     .pipe(dest('app/css'))
     .pipe(browserSync.stream())
-}
-function build() {
-  return src([
-    'app/**/*.html',
-    'app/css/style.min.css',
-    'app/js/main.min.js'
-  ], {base: 'app'})
-  .pipe(dest('dist'))
-}
-function cleanDist() {
-  return del('dist')
 }
 function scripts() {
   return src([
@@ -58,10 +46,10 @@ function scripts() {
     'node_modules/jquery-form-styler/dist/jquery.formstyler.js',
     'app/js/main.js'
   ])
-  .pipe(concat('main.min.js'))
-  .pipe(uglify())
-  .pipe(dest('app/js'))
-  .pipe(browserSync.stream())
+    .pipe(concat('main.min.js'))
+    .pipe(uglify())
+    .pipe(dest('app/js'))
+    .pipe(browserSync.stream())
 }
 function images() {
   return src('app/images/**/*.*')
@@ -79,6 +67,17 @@ function images() {
       ]
     ))
   .pipe(dest('./dist/images'))
+}
+function build() {
+  return src([
+    'app/**/*.html',
+    'app/css/style.min.css',
+    'app/js/main.min.js'
+  ], { base: 'app' })
+    .pipe(dest('dist'))
+}
+function cleanDist() {
+  return del('dist')
 }
 function watching() {
   watch(['app/*.scss', '!app/node_modules/*.scss'], styles);
