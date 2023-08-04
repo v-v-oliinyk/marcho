@@ -1,4 +1,5 @@
 const {src, dest, watch, parallel, series} = require('gulp');
+
 const scss            = require('gulp-sass')(require('sass'));
 const concat          = require('gulp-concat');
 const autoprefixer    = require('gulp-autoprefixer');
@@ -30,7 +31,7 @@ function styles() {
       suffix: '.min'
     }))
     .pipe(autoprefixer({
-      overrideBrowserslist: ['last 5 version'],
+      overrideBrowserslist: ['last 5 versions'],
       grid: true
     }))
     .pipe(dest('app/css'))
@@ -66,7 +67,7 @@ function images() {
         })
       ]
     ))
-  .pipe(dest('./dist/images'))
+  .pipe(dest('dist/images'))
 }
 function build() {
   return src([
@@ -80,7 +81,7 @@ function cleanDist() {
   return del('dist')
 }
 function watching() {
-  watch(['app/*.scss', '!app/node_modules/*.scss'], styles);
+  watch(['app/**/*.scss'], styles);
   watch(['app/*.njk'], nunjucks);
   watch(['app/js/**/*.js', '!app/js/main.min.js'], scripts)
   watch(['app/**/*.html']).on('change', browserSync.reload)
@@ -97,6 +98,6 @@ exports.nunjucks = nunjucks;
 exports.cleanDist = cleanDist;
 exports.build = series(cleanDist, images, build);
 
-exports.default = parallel(nunjucks, styles, scripts, browsersync, watching);
+exports.default = parallel(styles, nunjucks, scripts, browsersync, watching);
 
 
