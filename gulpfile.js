@@ -9,6 +9,34 @@ const nunjucksRender  = require('gulp-nunjucks-render');
 const del             = require('del');
 const browserSync     = require('browser-sync').create();
 
+function browsersync() {
+  browserSync.init({
+    server: {
+      baseDir: 'app/'
+    },
+    notify: false
+  })
+}
+function nunjucks() {
+  return src('app/*.njk')
+    .pipe(nunjucksRender())
+    .pipe(dest('app'))
+    .pipe(browserSync.stream())
+}
+function styles() {
+  return src('app/scss/*.scss')
+    .pipe(scss({ outputStyle: 'compressed' }))
+    // .pipe(concat())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(autoprefixer({
+      overrideBrowserslist: ['last 5 version'],
+      grid: true
+    }))
+    .pipe(dest('app/css'))
+    .pipe(browserSync.stream())
+}
 function build() {
   return src([
     'app/**/*.html',
@@ -19,40 +47,6 @@ function build() {
 }
 function cleanDist() {
   return del('dist')
-}
-function browsersync() {
-  browserSync.init({
-    server: {
-      baseDir: 'app/'
-    },
-    notify: false
-  })
-}
-function nunjucks(){
-  return src('app/*.njk')
-    .pipe(nunjucksRender())
-    .pipe(dest('app'))
-    .pipe(browserSync.stream())
-}
-function styles() {
-  return src('app/scss/*.scss')
-  .pipe(scss({outputStyle: 'compressed'}))
-  // .pipe(concat())
-  .pipe(rename({
-    suffix : '.min'
-  }))
-  .pipe(autoprefixer({
-    overrideBrowserslist: ['last 10 version'],
-    grid: true
-  }))
-  .pipe(dest('app/css'))
-  .pipe(browserSync.stream())
-}
-function watching() {
-  watch(['app/*.scss'], styles);
-  watch(['app/*.njk'], nunjucks);
-  watch(['app/js/**/*.js', '!app/js/main.min.js'], scripts)
-  watch(['app/**/*.html']).on('change', browserSync.reload)
 }
 function scripts() {
   return src([
@@ -86,6 +80,12 @@ function images() {
     ))
   .pipe(dest('./dist/images'))
 }
+function watching() {
+  watch(['app/*.scss', '!app/node_modules/*.scss'], styles);
+  watch(['app/*.njk'], nunjucks);
+  watch(['app/js/**/*.js', '!app/js/main.min.js'], scripts)
+  watch(['app/**/*.html']).on('change', browserSync.reload)
+}
 
 
 
@@ -95,6 +95,7 @@ exports.browsersync = browsersync;
 exports.watching = watching;
 exports.images = images;
 exports.nunjucks = nunjucks;
+exports.cleanDist = cleanDist;
 exports.build = series(cleanDist, images, build);
 
 exports.default = parallel(nunjucks, styles, scripts, browsersync, watching);
