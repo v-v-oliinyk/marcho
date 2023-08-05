@@ -32,7 +32,7 @@ function styles() {
     }))
     .pipe(autoprefixer({
       overrideBrowserslist: ['last 5 versions'],
-      grid: true
+      grid: false //false but need true
     }))
     .pipe(dest('app/css'))
     .pipe(browserSync.stream())
@@ -81,7 +81,7 @@ function cleanDist() {
   return del('dist')
 }
 function watching() {
-  watch(['app/**/*.scss'], styles);
+  watch(['app/**/*.scss', '!app/node_modules/*.scss'], styles);
   watch(['app/*.njk'], nunjucks);
   watch(['app/js/**/*.js', '!app/js/main.min.js'], scripts)
   watch(['app/**/*.html']).on('change', browserSync.reload)
@@ -98,6 +98,6 @@ exports.nunjucks = nunjucks;
 exports.cleanDist = cleanDist;
 exports.build = series(cleanDist, images, build);
 
-exports.default = parallel(styles, nunjucks, scripts, browsersync, watching);
+exports.default = parallel(nunjucks, styles, scripts, browsersync, watching);
 
 

@@ -19,6 +19,7 @@
   &__title {
     color: #28384f;
     font-size: 48px;
+    line-height: 52px;
     margin-bottom: 40px;
     @extend %roboto-700;
   }
@@ -38,4 +39,20 @@
 
 .header--404-page {
   background-color: $bg;
+}
+
+@media (max-width: 1240px) {
+  .page-404{
+    &__img{
+      width: 40%;
+    }
+  }
+}
+@media (max-width: 992px) {
+  .page-404{
+    padding: 60px 0;
+    &__img{
+      display: none;
+    }
+  }
 }

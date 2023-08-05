@@ -1,5 +1,8 @@
 $(function(){
 
+  $('.shop__filter-btn').on('click', function () {
+    $('.shop__filters').slideToggle();
+  });
   $('.menu__btn').on('click', function () {
     $('.menu__list').toggleClass('menu__list--active');
     $('.user-nav').toggleClass('active');
@@ -29,7 +32,15 @@ $(function(){
     slidesToShow: 4,
     slidesToScroll: 1,
     vertical: true,
-    draggable: false
+    draggable: false,
+    responsive: [
+      {
+        breakpoint: 1051,
+        settings: {
+          draggable: true,
+        }
+      }
+    ]
   });
   $('.product-slide__big').slick({
     asNavFor: '.product-slide__thumb',
@@ -45,10 +56,12 @@ $(function(){
 
   $('.button-list').on('click', function () { 
     $('.product-item').addClass('product-item--list');
+    $('.shop-content__inner').addClass('nogrid');
   }); //міняє тип відображення разом з наступною ф-єю
 
   $('.button-grid').on('click', function () {
     $('.product-item').removeClass('product-item--list');
+    $('.shop-content__inner').removeClass('nogrid');
   });
 
   $('.select-style, .product-one__num').styler(); //додає стилі для select
